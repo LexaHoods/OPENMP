@@ -1,0 +1,2 @@
+# OPENMP
+Tp OpenMp
