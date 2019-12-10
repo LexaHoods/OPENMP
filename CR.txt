@@ -1,0 +1,65 @@
+CR_openMP_Exos5-10_Nom1_Nom2
+
+
+Ex2
+
+1)
+Certains threads semblent s'executer trois, deux et une fois.
+
+Avant la region parallele la valeur de i n'a pas changee.
+
+Dans la region parallele, la valeur de i peut etre modifiee successivement par deux threads 
+et ensuite etre affichee par ces deux threads.
+
+Apres la region parallele, la valeur de i est egale a la derniere valeur de la region parallele.
+
+2)
+On constate que plus le X augmente, plus la repartition semble desequilibree, a cause
+du probleme identifie ci dessus.
+
+3) 
+On peut remedier a ce probleme en placant la declaration "int i" 
+a l'interieur de la zone parallele afin qu'elle ne soit plus une 
+variable partagee entre les threads.
+
+Ou bien en utilisant private(i) et en initialisant i
+Ou encore en utilisant firstprivate(i)
+
+Ex3
+
+1) 
+Dans les threads fils la valeur i prend la valeur 0.
+
+2)
+En utilisant copyin, la valeur sequentielle de i est copie
+dans tous les threads et elle vaut donc bien -1
+
+3) 
+En utilisant private, la valeur de i est initialise a 0 pour tous les 
+threads au sein de la section parallele.
+En dehors i reprend sa valeur.
+
+Ex4
+
+On constate que peut importe le nombre de thread, la valeur de i vaut toujours 2. 
+single permet a la section de n'etre effectue qu'une fois
+copyprivate permet de copier la valeur donnee dans tous les threads. 
+
+Ex5
+d)
+On constate que le nombre de threads ne varie pas
+e)
+Pour une taille fixé, plus le nombre de threads augmente, plus le temps 
+d'execution jusqu'a un certain point puis se stabilise
+f)
+
+
+Ex5-1
+En dynamique chaque threads prend en charge n/m cases du tableau, si le
+resultat de la division euclidienne vaut r et n'est pas nul, 
+les threads de 0 à r prennent en charge chacun une case supplementaire.
+
+L'utilisation d'un tableau statique ne change rien.
+
+Ex5-2
+
