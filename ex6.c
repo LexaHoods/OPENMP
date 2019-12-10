@@ -1,4 +1,4 @@
-include <stdio.h>
+#include <stdio.h>
 #include <omp.h>
 #include <stdlib.h>
 #include <time.h>
@@ -49,6 +49,7 @@ void reduction(int * tab,int taille){
     }
     printf("Pour l'opération + : result = %d\n",result);
     printf("Prends %f ms en temps d'execution pour l'operation +\n", (omp_get_wtime() - T0) * 1000);
+    //b) Réduction avec l'opération * :
     result = 1;
     T0 = omp_get_wtime(); //Temps d'execution
     #pragma omp parallel for reduction(*:result)
@@ -57,6 +58,7 @@ void reduction(int * tab,int taille){
     }
     printf("Pour l'opération * : result = %d\n",result);
     printf("Prends %f ms en temps d'execution pour l'operation *\n", (omp_get_wtime() - T0) * 1000);
+    //c) Réduction avec l'opération - :
     result = tab[0];
     T0 = omp_get_wtime(); //Temps d'execution
     #pragma omp parallel for reduction(-:result)
@@ -65,7 +67,7 @@ void reduction(int * tab,int taille){
     }
     printf("Pour l'opération - : result = %d\n",result);
     printf("Prends %f ms en temps d'execution pour l'operation -\n", (omp_get_wtime() - T0) * 1000);
-
+    //d) Réduction avec l'opération min :
     result = tab[0];
     T0 = omp_get_wtime(); //Temps d'execution
     #pragma omp parallel for reduction(min:result)
@@ -74,8 +76,8 @@ void reduction(int * tab,int taille){
     }
     printf("Pour l'opération min : result = %d\n",result);
     printf("Prends %f ms en temps d'execution pour l'operation min\n", (omp_get_wtime() - T0) * 1000);
+    //e) Réduction avec l'opération max :
     result = tab[0];
-
     T0 = omp_get_wtime(); //Temps d'execution
     #pragma omp parallel for reduction(max:result)
     for(k = 0; k<taille; k++) {
