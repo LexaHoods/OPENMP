@@ -11,53 +11,85 @@ void SommVectVect(int n, double* a, double* b, double** c);
 
 int main(int argc, char **argv){   
  
+    FILE* fichier = fopen("perf8.csv", "w");  
+    srand(time(NULL));
+    
+    fprintf(fichier,"Temps;nl;nc");
     
     int nl=2,nc=2;
-    
-    if(argc!=1){
-        nl = atoi(argv[1]);
-        nc=nl;
-    }
-    
+    int t,tmax=10;
     int i,j;
     
     double debut,fin;
     
-    double **A=(double **) malloc(sizeof(double*)*nl);
+    if(argc==3){
+        nl = atoi(argv[1]);
+        nc = atoi(argv[2]);
+        tmax=1;
+    }
+    for(t=0;t<tmax;t++){
     
-    double *x=(double *) malloc(sizeof(double)*nl);
-    double *temp=(double *) malloc(sizeof(double)*nl);
-    double *temp2=(double *) malloc(sizeof(double)*nl);
-    
-    #pragma omp parallel for
-    for(i=0;i<nl;i++){
-        A[i]=(double *) malloc(sizeof(double)*nc);
+        double **A=(double **) malloc(sizeof(double*)*nl);
         
-        for(j=0;j<nc;j++){
-            A[i][j]=rand()%10;
+        double *x=(double *) malloc(sizeof(double)*nl);
+        double *temp=(double *) malloc(sizeof(double)*nl);
+        double *temp2=(double *) malloc(sizeof(double)*nl);
+        
+        
+        for(i=0;i<nl;i++){
+            A[i]=(double *) malloc(sizeof(double)*nc);
+            
+            for(j=0;j<nc;j++){
+                A[i][j]=rand()%10;
+            }
+            
+            x[i]=rand()%10;
+            temp[i]=0;
+            temp2[i]=0;
         }
         
-        x[i]=rand()%10;
-        temp[i]=0;
-        temp2[i]=0;
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                for(j=0;j<nc;j++){
+                     printf("A%d%d %f\n",i,j,A[i][j]);
+                }
+            }
+            for(i=0;i<nl;i++){
+                printf("x%d %f\n",i,x[i]);
+            }
+        }
+        
+        
+        debut = omp_get_wtime();
+        ProdMatVect(nc,nl,A,x,temp);
+        SommVectVect(nl,temp,x,&temp2);
+        ProdMatVect(nc,nl,A,temp2,temp);
+        SommVectVect(nl,temp,x,&temp2);
+        fin = omp_get_wtime();
+        
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                printf("resulat%d %f\n",i,temp2[i]);
+            }
+        }
+        
+        printf("\ntemps: %3.6f s\n",fin-debut);
+        fprintf(fichier,"\n%f;%d;%d;",fin-debut,nl,nc);
+        
+        for(i=0;i<nl;i++){
+            free(A[i]);
+        }
+        free(A);
+        free(x);
+        free(temp);
+        free(temp2);
+
+
+        nc*=2;
+        nl*=2;
     }
     
-    debut = omp_get_wtime();
-    ProdMatVect(nc,nl,A,x,temp);
-    SommVectVect(nl,temp,x,&temp2);
-    ProdMatVect(nc,nl,A,temp2,temp);
-    SommVectVect(nl,temp,x,&temp2);
-    fin = omp_get_wtime();
-    
-    printf("\ntemps: %3.6f s\n",fin-debut);
-    
-    for(i=0;i<nl;i++){
-        free(A[i]);
-    }
-    free(A);
-    free(x);
-    free(temp);
-    free(temp2);
+    fclose(fichier);
     
     return 0;
 }
@@ -104,3 +136,32 @@ void ProdMatMat(int nc, int nl, double** A, double** B, double*** C){
         }
     }
 }
+
+/*
+
+Si on ne précise pas la taille en faisant
+gcc -fopenmp -Werror ex8.c -o ex8.out
+./ex8.out 
+ou bien make 8
+Alors on vas calculer les temps d'execution pour des matrices de taille
+croissante et stocker les resultats dans perf8.csv
+
+Si on précise une taille, on lance le calcul et on affiche les resultats
+a des fins de verification
+
+gcc -fopenmp -Werror ex8.c -o ex8.out
+./ex8.out 2 2
+ou bien
+make 8 x=2 y=2 
+
+A00 6.000000
+A01 0.000000
+A10 6.000000
+A11 3.000000
+x0 5.000000
+x1 0.000000
+resulat0 215.000000
+resulat1 300.000000
+
+temps: 0.002236 s
+*/

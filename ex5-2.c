@@ -8,18 +8,23 @@ void print_tab(double *tab,int taille);
 
 int main(int argc, char **argv){   
     
+    FILE* fichier = fopen("perf5-2.csv", "w");
+    
     srand(time(NULL));
     int nbr_thread=4;
     omp_set_num_threads(nbr_thread);
    
     int i,j,taille = 10;
     
+    double debut,fin;
+    
     printf("\nTaille variable, Nbr de threas fixe: %d\n",nbr_thread);
+    fprintf(fichier,"Taille;Temps;");
     for(taille=10;taille<10000000;taille*=10){
         
         double *tab=(double *) malloc(sizeof(double)*taille);
         
-        double debut = omp_get_wtime();
+        debut = omp_get_wtime();
         
         double somme;
         
@@ -33,13 +38,15 @@ int main(int argc, char **argv){
             somme+=tab[i];
             //printf("Thread: %d s: %11.0f i: %11.0f\n",omp_get_thread_num(),somme,tab[i]);
         }
-        
-        printf("temps: %3.6f s | taille: %d\n",omp_get_wtime()-debut,taille);
+        fin=omp_get_wtime();
+        printf("temps: %3.6f s | taille: %d\n",fin-debut,taille);
+        fprintf(fichier,"\n%d;%f;",taille,fin-debut);
         //printf("Somme finale: %11.0f\n",somme);
         
         free(tab);;
     }
     printf("\nNbr de threas variable, taille fixe: %d\n",taille);
+    fprintf(fichier,"\nNbr de threas ;Temps;");
     taille=1000000;
     double *tab=(double *) malloc(sizeof(double)*taille);
     
@@ -49,7 +56,7 @@ int main(int argc, char **argv){
         
         double somme;
         
-        double debut = omp_get_wtime();
+        debut = omp_get_wtime();
         
         #pragma omp parallel for
         for(i=0;i<taille;i++){
@@ -61,11 +68,14 @@ int main(int argc, char **argv){
             somme+=tab[i];
             //printf("Thread: %d s: %11.0f i: %11.0f\n",omp_get_thread_num(),somme,tab[i]);
         }
-       
-        printf("temps: %3.6f s | nbr Threads: %d \n",omp_get_wtime()-debut,j);
+        fin =omp_get_wtime();
+        printf("temps: %3.6f s | nbr Threads: %d \n",fin-debut,j);
+        fprintf(fichier,"\n%d;%f;",j,fin-debut);
         //printf("Somme finale: %11.0f\n",somme);
     }
     free(tab);
+    
+    fclose(fichier);
 }
 
 
@@ -74,7 +84,7 @@ int main(int argc, char **argv){
 Les courbes de performances sont en annexes 
 
 Pour afficher les sommes partielles et totales, il faut decommenter 
-les lignes 34,38, 62 et 66
+les lignes 39,44, 69 et 74
 
 Jeu de test :
 gcc -fopenmp -Werror ex5-2.c -o ex5-2.out

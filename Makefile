@@ -16,7 +16,7 @@ all:
 	rm -f $@.out
 	clear
 	gcc $(DIRECTIVE) ex$@.c -o ex$@.out
-	./ex$@.out $x
+	./ex$@.out $x $y
 
 clear:
 	rm -f *.out

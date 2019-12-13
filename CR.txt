@@ -21,9 +21,24 @@ le tmps de calcul
 
 Ex5-2
 
-Les courbes de performances sont en annexes
+Les temps de calculs se trouvent aussi dans le fichier perf5-2.csv
 
 Pour afficher les sommes partielles et totales, il faut decommenter 
-les lignes 34,38, 62 et 66
+les lignes 39,44, 69 et 74.
 
 Ex5-3
+
+La repartition de la charge entre les processus 
+
+Ex6
+
+Ex7
+
+Les temps de calculs se trouvent aussi dans le fichier perf7.csv
+Ils sont recalcule en lancant l'exercice sans preciser de taille.
+
+
+Ex8
+
+Les temps de calculs se trouvent aussi dans le fichier perf8.csv
+Ils sont recalcule en lancant l'exercice sans preciser de taille.

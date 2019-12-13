@@ -8,94 +8,118 @@ void ProdMatMat(int nc, int nl, double** A, double** B, double*** C);
 
 int main(int argc, char **argv){   
  
+    FILE* fichier = fopen("perf7.csv", "w");  
+    srand(time(NULL));
  
     int nl=2,nc=2;
-    
-    if(argc!=1){
-        nl = atoi(argv[1]);
-        nc=nl;
-    }
-    
     int i,j;
+    int t,tmax=10;
     double debut,fin;
+    if(argc==3){
+        nl = atoi(argv[1]);
+        nc = atoi(argv[2]);
+        tmax=1;
+    }
+    fprintf(fichier,"TempsMatriceVecteur;TempsMatriceMatrice;nl;nc");
     
-    double x[nl], y[nl];
-    
-    double **A=(double **) malloc(sizeof(double*)*nl);
-    double **B=(double **) malloc(sizeof(double*)*nl);
-    double **C=(double **) malloc(sizeof(double*)*nl);
-    
-    #pragma omp parallel for
-    for(i=0;i<nl;i++){
-        A[i]=(double *) malloc(sizeof(double)*nc);
-        B[i]=(double *) malloc(sizeof(double)*nc);
-        C[i]=(double *) malloc(sizeof(double)*nc);
+    for(t=0;t<tmax;t++){
         
-        for(j=0;j<nc;j++){
-            A[i][j]=rand()%10;
-            B[i][j]=rand()%10;
-            C[i][j]=0;
+        
+        double *x=(double*) malloc(sizeof(double)*nl);
+        double *y=(double*) malloc(sizeof(double)*nl);
+        
+        double **A=(double **) malloc(sizeof(double*)*nl);
+        double **B=(double **) malloc(sizeof(double*)*nl);
+        double **C=(double **) malloc(sizeof(double*)*nl);
+        
+        for(i=0;i<nl;i++){
+            A[i]=(double *) malloc(sizeof(double)*nc);
+            B[i]=(double *) malloc(sizeof(double)*nc);
+            C[i]=(double *) malloc(sizeof(double)*nc);
+            
+            for(j=0;j<nc;j++){
+                A[i][j]=rand()%10;
+                B[i][j]=rand()%10;
+                C[i][j]=0;
+            }
+            x[i]=rand()%10;
+            y[i]=0;
         }
-        x[i]=rand()%10;
-        y[i]=0;
-    }
 
-    printf("\nProduit Matrice Vecteur \n");
-    for(i=0;i<nl;i++){
-        for(j=0;j<nc;j++){
-             printf("A%d%d %f\n",i,j,A[i][j]);
+        printf("\nProduit Matrice Vecteur \n");
+        
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                for(j=0;j<nc;j++){
+                     printf("A%d%d %f\n",i,j,A[i][j]);
+                }
+            }
+            for(i=0;i<nl;i++){
+                printf("x%d %f\n",i,x[i]);
+            }
         }
-    }
-    for(i=0;i<nl;i++){
-        printf("x%d %f\n",i,x[i]);
-    }
-    
-    debut = omp_get_wtime();
-    ProdMatVect(nc,nl,A,x,y);
-    fin = omp_get_wtime();
-    
-    for(i=0;i<nl;i++){
-        printf("y%d %f\n",i,y[i]);
-    }
-    
-    printf("\ntemps: %3.6f s\n",fin-debut);
-    
-    
-    printf("\nProduit Matrice Matrice \n");
-    for(i=0;i<nl;i++){
-        for(j=0;j<nc;j++){
-             printf("A%d%d %f\n",i,j,A[i][j]);
+        debut = omp_get_wtime();
+        ProdMatVect(nc,nl,A,x,y);
+        fin = omp_get_wtime();
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                printf("y%d %f\n",i,y[i]);
+            }
         }
-    }
-    for(i=0;i<nl;i++){
-        for(j=0;j<nc;j++){
-             printf("B%d%d %f\n",i,j,B[i][j]);
+        printf("\ntemps: %3.6f s\n",fin-debut);
+        fprintf(fichier,"\n%f;",fin-debut);
+        
+        
+        printf("\nProduit Matrice Matrice \n");
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                for(j=0;j<nc;j++){
+                     printf("A%d%d %f\n",i,j,A[i][j]);
+                }
+            }
+            for(i=0;i<nl;i++){
+                for(j=0;j<nc;j++){
+                     printf("B%d%d %f\n",i,j,B[i][j]);
+                }
+            }
         }
-    }
-    
-    debut = omp_get_wtime();
-    ProdMatMat(nc,nl,A,B,&C);
-    fin = omp_get_wtime();
-    
-    for(i=0;i<nl;i++){
-        for(j=0;j<nc;j++){
-             printf("C%d%d %f\n",i,j,C[i][j]);
+        
+        debut = omp_get_wtime();
+        ProdMatMat(nc,nl,A,B,&C);
+        fin = omp_get_wtime();
+        
+        if(tmax==1){
+            for(i=0;i<nl;i++){
+                for(j=0;j<nc;j++){
+                     printf("C%d%d %f\n",i,j,C[i][j]);
+                }
+            }
         }
+        
+        printf("\ntemps: %3.6f s\n",fin-debut);
+        fprintf(fichier,"%f;",fin-debut);
+        fprintf(fichier,"%d;%d;",nl,nc);
+        
+        for(i=0;i<nl;i++){
+            free(A[i]);
+            free(B[i]);
+            free(C[i]);
+        }
+        free(A);
+        free(B);
+        free(C);
+        free(x);
+        free(y);
+        
+        nc*=2;
+        nl*=2;
     }
-    
-    printf("\ntemps: %3.6f s\n",fin-debut);
-    
-    for(i=0;i<nl;i++){
-        free(A[i]);
-        free(B[i]);
-        free(C[i]);
-    }
-    free(A);
-    free(B);
-    free(C);
+        
+    fclose(fichier);
     
     return 0;
 }
+
 
 void ProdMatVect(int nc, int nl, double** A, double* x, double* y){
     
@@ -133,9 +157,20 @@ void ProdMatMat(int nc, int nl, double** A, double** B, double*** C){
 
 
 /*
+
+Si on ne précise pas la taille en faisant
 gcc -fopenmp -Werror ex7.c -o ex7.out
 ./ex7.out 
-ou bien make 7 ou bien make 7 x=2
+ou bien make 7 
+Alors on vas calculer les temps d'execution pour des matrices de taille
+croissante et stocker les resultats dans perf7.csv
+
+Si on précise une taille, on lance le calcul et on affiche les resultats
+a des fins de verification
+
+gcc -fopenmp -Werror ex7.c -o ex7.out
+./ex7.out 2 2
+ou bien make 7 x=2 y=2
 
 Produit Matrice Vecteur 
 A00 3.000000
