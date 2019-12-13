@@ -16,21 +16,26 @@ En dynamique chaque threads prend en charge n/m cases du tableau, si le
 resultat de la division euclidienne vaut r et n'est pas nul,
 les threads de 0 à r prennent en charge chacun une case supplementaire.
 
-L'utilisation d'un tableau statique ne change rien a la charge mais reduit 
+L'utilisation d'un tableau statique ne change rien a la charge mais reduit
 le tmps de calcul
 
 Ex5-2
 
 Les temps de calculs se trouvent aussi dans le fichier perf5-2.csv
 
-Pour afficher les sommes partielles et totales, il faut decommenter 
+Pour afficher les sommes partielles et totales, il faut decommenter
 les lignes 39,44, 69 et 74.
 
 Ex5-3
 
-La repartition de la charge entre les processus 
+La repartition de la charge entre les processus
 
 Ex6
+
+On remarque que l'opération min et max sont les plus rapide
+en terme d'execution.
+
+Les 3 autres opérations se suivent de près.
 
 Ex7
 

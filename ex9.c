@@ -4,7 +4,8 @@
 #include <omp.h>
 #include <stdlib.h>
 #include <time.h>
-
+//omp_lock_t lock;
+//int calcul(int * array, int length);
 void carre(int * tab, int taille);
 void affichage(int * tab, int taille);
 void addreel(int* tab, int taille);
@@ -18,7 +19,7 @@ int main(int argc, char ** argv) {
     srand(time(NULL));
 
     int * tab;
-
+    //int total;
     int i,taille=10;
 
     if(argc!=1){
@@ -40,6 +41,9 @@ int main(int argc, char ** argv) {
     addSecCritique(tab,taille);
     addReduction(tab,taille);
     addAtomique(tab,taille);
+    // omp_init_lock(&lock);
+    // total=calcul(tab,taille);
+    // omp_destroy_lock(&lock);
     //Affichage du résultat :
     //affichage(tab, taille);
 
@@ -115,7 +119,20 @@ void addReduction(int * tab, int taille) {
         printf("[reduction] Prends %f ms en temps d'execution\n", (omp_get_wtime() - T0) * 1000);
     }
 
+/*    int calcul(int* array, int length){
+        double T0 = omp_get_wtime();
+        int total = 0;
+        #pragma omp parallel for
+            for(int i = 0; i < length; i++) {
+                omp_set_lock(&lock);
+                total+=array[i];
+                omp_unset_lock(&lock);
 
+        }
+        printf("Prends %f ms en temps d'execution pour le calcul\n", (omp_get_wtime() - T0) * 1000);
+
+        return total;
+    }   */
 
 /*
 
@@ -175,4 +192,7 @@ dire qu'elle est plus performante.
 e) La clause réduction est la plus performante des 3, et permet d'éviter les collisions simplement.
 Elle peut aussi gérer plusieurs autres opérations tel que la multiplication, la soustraction ..
 
+
+******** Exo 10 ***
+pour comparer les résultats décommenter les lignes 7, 8, 22 , 44 à 46 et 122 à 135
 */
