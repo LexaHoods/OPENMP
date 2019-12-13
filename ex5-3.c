@@ -15,9 +15,9 @@ int main(int argc, char **argv){
     int nl=10,nc=10; //attention <1000
     double debut,fin;
     
-    if(argc!=1){
+    if(argc==3){
         nl = atoi(argv[1]);
-        nc=nl;
+        nc = atoi(argv[2]);
     }
     
     printf("\nTableau statique \n");

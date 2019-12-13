@@ -12,7 +12,8 @@ f)
  avec :  set OMP_NUM_THREADS=16
 
 Ex5-1
-En dynamique chaque threads prend en charge n/m cases du tableau, si le
+En dynamique chaque threads prend en charge n/m cases du tableau 
+(n taille du tableau, m nombre total de thread), si le
 resultat de la division euclidienne vaut r et n'est pas nul,
 les threads de 0 à r prennent en charge chacun une case supplementaire.
 
@@ -28,7 +29,42 @@ les lignes 39,44, 69 et 74.
 
 Ex5-3
 
-La repartition de la charge entre les processus
+La repartition de la charge entre les processus est moins equilibre 
+que ce qu'on a pu voir a la question 5-1, pourtant elle suis le meme 
+principe, si le nombre de ligne n'est pas divisible parle nombre de thread
+les premiers threads vont s'occuper des lignes restantes.
+
+ex
+Thread: 0 Charge: 0-0 
+Thread: 0 Charge: 0-1 
+Thread: 0 Charge: 0-2 
+Thread: 0 Charge: 0-3 
+Thread: 0 Charge: 0-4 
+
+Thread: 0 Charge: 1-0 
+Thread: 0 Charge: 1-1 
+Thread: 0 Charge: 1-2 
+Thread: 0 Charge: 1-3 
+Thread: 0 Charge: 1-4 
+
+Thread: 1 Charge: 2-0 
+Thread: 1 Charge: 2-1 
+Thread: 1 Charge: 2-2 
+Thread: 1 Charge: 2-3 
+Thread: 1 Charge: 2-4 
+
+Thread: 2 Charge: 3-0 
+Thread: 2 Charge: 3-1 
+Thread: 2 Charge: 3-2 
+Thread: 2 Charge: 3-3 
+Thread: 2 Charge: 3-4 
+
+Thread: 3 Charge: 4-0 
+Thread: 3 Charge: 4-1 
+Thread: 3 Charge: 4-2 
+Thread: 3 Charge: 4-3 
+Thread: 3 Charge: 4-4 
+
 
 Ex6
 
@@ -54,16 +90,7 @@ a) On remarque grâce à notre fonction témoin que le total diffère par rappor
 des éléments du tableau.
 Ceci est du aux collisions puisque nous avons pas protégé correctement la somme.
 
-make 9 x=110
-3   6   16  3   14  8   4   12  16  10  415 11  11  16  13  10  11
-9   0   9   16  2   8   0   12  9   18  16  14  0   18  1   6   1
-10  19  3   3   18  18  619 3   16  15  11  1   16  15  15  12  44
-12  5   3   4   7   7   2   6   7   18  11  0   13  2   3   7   16
-2   7   213 0   10  14  19  4   7   1   6   16  612 7   14  17  17
-8   0   7   11  15  416 17  19  3   5   1   10  7   14  10  17  0
-13  19
-Total = 0
-total réel : 1023
+
 b) On remarque que la valeur total est toujours égal à la valeur initial(ici 0) puisqu'on l'a
 mit en private(total) la valeur total n'est pas modifié à la fin de la région parallèle, cette clause privatise
 la variable total et est persistant.
@@ -82,6 +109,7 @@ que la clause atomique ou reduction pour réaliser la même opération.
 
 d) On constate que la clause atomique est au moins 3 fois plus rapide par rapport à la clause critique, on peut donc
 dire qu'elle est plus performante.
+
 e) La clause réduction est la plus performante des 3, et permet d'éviter les collisions simplement.
 Elle peut aussi gérer plusieurs autres opérations tel que la multiplication, la soustraction ..
 
