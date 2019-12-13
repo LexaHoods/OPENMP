@@ -16,6 +16,14 @@ En dynamique chaque threads prend en charge n/m cases du tableau, si le
 resultat de la division euclidienne vaut r et n'est pas nul,
 les threads de 0 à r prennent en charge chacun une case supplementaire.
 
-L'utilisation d'un tableau statique ne change rien.
+L'utilisation d'un tableau statique ne change rien a la charge mais reduit 
+le tmps de calcul
 
 Ex5-2
+
+Les courbes de performances sont en annexes
+
+Pour afficher les sommes partielles et totales, il faut decommenter 
+les lignes 34,38, 62 et 66
+
+Ex5-3

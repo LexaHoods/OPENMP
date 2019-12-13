@@ -12,29 +12,29 @@ int main(int argc, char **argv){
    
     
     int i,j;
-    //int m=4;
-    int nl=1000,nc=1000; //attention <1000
+    int nl=10,nc=10; //attention <1000
+    double debut,fin;
     
-    //omp_set_num_threads(m);
-
+    if(argc!=1){
+        nl = atoi(argv[1]);
+        nc=nl;
+    }
     
-    printf("\nTableau statique\n");
+    printf("\nTableau statique \n");
     double t[nl][nc];
     
-    //debut = omp_get_wtime();
+    debut = omp_get_wtime();
     
-    //#pragma omp parallel for
+    #pragma omp parallel for private(i,j)
     for(i=0;i<nl;i++){
         for(j=0;j<nc;j++){
-            //printf("%d-%d\n",i,j);
+            printf("Thread: %d Charge: %d-%d \n",omp_get_thread_num(),i,j);
             t[i][j]=rand();
         }
     }
-    //fin = omp_get_wtime();
+    fin = omp_get_wtime();
     
-    printf("%f\n",t[0][0]);
-    
-    //printf("temps: %3.6f s\n",fin-debut);
+    printf("temps: %3.6f s\n",fin-debut);
     
     
     printf("\nTableau dynamique\n");
@@ -44,19 +44,19 @@ int main(int argc, char **argv){
         tab[i]=(double *) malloc(sizeof(double)*nc);
     }
     
-    //double debut = omp_get_wtime();
+    debut = omp_get_wtime();
     
-    //#pragma omp parallel for
+    #pragma omp parallel for private(i,j)
     for(i=0;i<nl;i++){
         for(j=0;j<nc;j++){
-            //printf("%d-%d\n",i,j);
+            printf("Thread: %d Charge: %d-%d \n",omp_get_thread_num(),i,j);
             tab[i][j]=rand();
         }
     }
     
-    //double fin = omp_get_wtime();
+    fin = omp_get_wtime();
     
-    //printf("temps: %3.6f s\n",fin-debut);
+    printf("temps: %3.6f s\n",fin-debut);
     
     for(i=0;i<nl;i++){
         free(tab[i]);
@@ -65,6 +65,34 @@ int main(int argc, char **argv){
         
     return 0;
 }
+/*
+gcc -fopenmp -Werror ex5-3.c -o ex5-3.out
+./ex5-3.out 3
+Ou bien 
+make 5-3 x=3
 
+Tableau statique 
+Thread: 0 Charge: 0-0 
+Thread: 0 Charge: 0-1 
+Thread: 0 Charge: 0-2 
+Thread: 1 Charge: 1-0 
+Thread: 1 Charge: 1-1 
+Thread: 1 Charge: 1-2 
+Thread: 2 Charge: 2-0 
+Thread: 2 Charge: 2-1 
+Thread: 2 Charge: 2-2 
+temps: 0.001922 s
 
+Tableau dynamique
+Thread: 1 Charge: 1-0 
+Thread: 1 Charge: 1-1 
+Thread: 1 Charge: 1-2 
+Thread: 2 Charge: 2-0 
+Thread: 2 Charge: 2-1 
+Thread: 2 Charge: 2-2 
+Thread: 0 Charge: 0-0 
+Thread: 0 Charge: 0-1 
+Thread: 0 Charge: 0-2 
+temps: 0.000258 s
+*/
 

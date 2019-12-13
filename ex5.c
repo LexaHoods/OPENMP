@@ -18,8 +18,11 @@ int main(int argc, char ** argv) {
 
     int * tab;
 
-    int taille = atoi(argv[1]); // a) permet de lire la taille du tableau sur la ligne de commande
-    int i;
+    int i,taille=10000;
+    
+    if(argc!=1){
+        taille = atoi(argv[1]);// a) permet de lire la taille du tableau sur la ligne de commande
+    }
 
     // remplit le tableau en parallele :
     tab = (int*) malloc(sizeof(int) * taille);
@@ -65,27 +68,27 @@ Jeu de test :
 (gcc exo5.c -o exo5 -fopenmp)
 ./exo5 1 ou make 5 x=1 :
 Nombre de thread  crées par OpenMP: 1
-15 	2 	17 	13 	13 	19 	5 	18 	14 	11
-225 	4 	289 	169 	169 	361 	25 	324 	196 	121
+15  2   17  13  13  19  5   18  14  11
+225     4   289     169     169     361     25  324     196     121
 Prends 0.153338 ms en temps d'execution
 
 ./exo5 4 ou make 5 x=4 :
 Nombre de thread  crées par OpenMP: 4
-9 	9 	13 	2 	8 	10 	10 	17 	2 	6
-81 	81 	169 	4 	64 	100 	100 	289 	4 	36
+9   9   13  2   8   10  10  17  2   6
+81  81  169     4   64  100     100     289     4   36
 Prends 0.816962 ms en temps d'execution
 
 ./exo5 5 ou make 5 x=5:
 Nombre de thread  crées par OpenMP: 5
-12 	18 	2 	6 	19 	5 	9 	19 	17 	19
-144 	324 	4 	36 	361 	25 	81 	361 	289 	361
+12  18  2   6   19  5   9   19  17  19
+144     324     4   36  361     25  81  361     289     361
 Prends 1.125846 ms en temps d'execution
 
 
 ./exo5 10  ou make 5 x=10:
 Nombre de thread  crées par OpenMP: 10
-9 	14 	1 	4 	0 	9 	10 	5 	2 	15
-81 	196 	1 	16 	0 	81 	100 	25 	4 	225
+9   14  1   4   0   9   10  5   2   15
+81  196     1   16  0   81  100     25  4   225
 Prends 1.359946 ms en temps d'execution
 
 e) On remarque que plus le nombre de threads augmente, plus le temps d'éxecution augmente.

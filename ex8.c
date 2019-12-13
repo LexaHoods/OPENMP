@@ -13,7 +13,15 @@ int main(int argc, char **argv){
  
     
     int nl=2,nc=2;
+    
+    if(argc!=1){
+        nl = atoi(argv[1]);
+        nc=nl;
+    }
+    
     int i,j;
+    
+    double debut,fin;
     
     double **A=(double **) malloc(sizeof(double*)*nl);
     
@@ -34,10 +42,22 @@ int main(int argc, char **argv){
         temp2[i]=0;
     }
     
+    debut = omp_get_wtime();
     ProdMatVect(nc,nl,A,x,temp);
     SommVectVect(nl,temp,x,&temp2);
     ProdMatVect(nc,nl,A,temp2,temp);
     SommVectVect(nl,temp,x,&temp2);
+    fin = omp_get_wtime();
+    
+    printf("\ntemps: %3.6f s\n",fin-debut);
+    
+    for(i=0;i<nl;i++){
+        free(A[i]);
+    }
+    free(A);
+    free(x);
+    free(temp);
+    free(temp2);
     
     return 0;
 }
