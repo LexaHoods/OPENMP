@@ -1,3 +1,5 @@
+//Exercice 10 , Axel Houdayer et Florian Simon-Rouquie IATIC 4
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

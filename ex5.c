@@ -1,4 +1,5 @@
-//Exercice 5 , Axel Houdayer IATIC 4
+//Exercice 5 , Axel Houdayer et Florian Simon-Rouquie IATIC 4
+
 
 #include <stdio.h>
 #include <omp.h>
@@ -19,7 +20,7 @@ int main(int argc, char ** argv) {
     int * tab;
 
     int i,taille=10000;
-    
+
     if(argc!=1){
         taille = atoi(argv[1]);// a) permet de lire la taille du tableau sur la ligne de commande
     }

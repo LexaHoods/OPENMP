@@ -1,4 +1,4 @@
-//Exercice 5 , Axel Houdayer IATIC 4
+//Exercice 9 , Axel Houdayer et Florian Simon-Rouquie IATIC 4
 
 #include <stdio.h>
 #include <omp.h>
