@@ -47,3 +47,47 @@ Ex8
 
 Les temps de calculs se trouvent aussi dans le fichier perf8.csv
 Ils sont recalcule en lancant l'exercice sans preciser de taille.
+
+Ex 9
+
+a) On remarque grâce à notre fonction témoin que le total diffère par rapport au total réel
+des éléments du tableau.
+Ceci est du aux collisions puisque nous avons pas protégé correctement la somme.
+
+make 9 x=110
+3   6   16  3   14  8   4   12  16  10  415 11  11  16  13  10  11
+9   0   9   16  2   8   0   12  9   18  16  14  0   18  1   6   1
+10  19  3   3   18  18  619 3   16  15  11  1   16  15  15  12  44
+12  5   3   4   7   7   2   6   7   18  11  0   13  2   3   7   16
+2   7   213 0   10  14  19  4   7   1   6   16  612 7   14  17  17
+8   0   7   11  15  416 17  19  3   5   1   10  7   14  10  17  0
+13  19
+Total = 0
+total réel : 1023
+b) On remarque que la valeur total est toujours égal à la valeur initial(ici 0) puisqu'on l'a
+mit en private(total) la valeur total n'est pas modifié à la fin de la région parallèle, cette clause privatise
+la variable total et est persistant.
+
+c) make 9 10000 :
+total réel : 94092
+Total section critique = 94092
+[secCritique] Prends 1.097334 ms en temps d'execution
+Total reduction  = 94092
+[reduction] Prends 0.208341 ms en temps d'execution
+Total atomique = 94092
+[atomique] Prends 0.341346 ms en temps d'execution
+
+On remarque qu'en terme de performance la somme par section critique est la pire, en effet elle met plus de temps
+que la clause atomique ou reduction pour réaliser la même opération.
+
+d) On constate que la clause atomique est au moins 3 fois plus rapide par rapport à la clause critique, on peut donc
+dire qu'elle est plus performante.
+e) La clause réduction est la plus performante des 3, et permet d'éviter les collisions simplement.
+Elle peut aussi gérer plusieurs autres opérations tel que la multiplication, la soustraction ..
+
+Ex 10
+
+On remarque que le programme prends presque autant de temps
+que l'addition avec la section critique.
+Il a donc des mauvais résultat pour le calcul.
+(Test effectué dans l'exercice 9 pour comparer sur les mêmes valeurs)
